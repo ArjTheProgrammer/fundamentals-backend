@@ -1,9 +1,13 @@
 const express = require('express')
 const userRouter = require('./routes/users')
+const workoutRouter = require('./routes/workouts')
+const drillRouter = require('./routes/drills')
 const app = express()
 
 app.use(express.json())
 
-app.use('/users', userRouter)
+app.use('/api/drills', drillRouter)
+app.use('/api/workouts', workoutRouter)
+app.use('/api/users', userRouter)
 
 module.exports = app

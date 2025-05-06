@@ -1,10 +1,12 @@
-const userRouter = require('express').Router()
+const workoutRouter = require('express').Router()
 const config = require('../utils/config')
 
-userRouter.get('/', async (req, res) => {
+workoutRouter.get('/:id', async (req, res) => {
   try {
     const pool = await config.poolPromise
-    const result = await pool.request().query(`
+    const result = await pool.request()
+      .input('userId', config.sql.Int, req.params.id)
+      .query(`
         SELECT 
             w.workout_name,
             d.drill_name,
@@ -14,6 +16,7 @@ userRouter.get('/', async (req, res) => {
         JOIN Workouts w ON wd.workout_id = w.workout_id
         JOIN Drills d ON wd.drill_id = d.drill_id
         JOIN Skills s ON d.skill_id = s.skill_id
+        WHERE w.user_id = @userid
         ORDER BY w.workout_name, wd.drill_order;
         `)
     res.json(result.recordset)
@@ -22,4 +25,4 @@ userRouter.get('/', async (req, res) => {
   }
 })
 
-module.exports = userRouter
+module.exports = workoutRouter

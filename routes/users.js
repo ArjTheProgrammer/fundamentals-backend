@@ -1,7 +1,7 @@
 const userRouter = require('express').Router()
 const config = require('../utils/config')
 
-userRouter.get('/', async (req, res) => {
+userRouter.get('/:id', async (req, res) => {
   try {
     const pool = await config.poolPromise
     const result = await pool.request().query('SELECT * FROM Users')

@@ -11,6 +11,7 @@ workoutRouter.get('/:id', async (req, res) => {
             w.workout_name,
             d.drill_name,
             s.skill_name,
+            wd.instructions,
             wd.drill_order
         FROM Workout_Drills wd
         JOIN Workouts w ON wd.workout_id = w.workout_id

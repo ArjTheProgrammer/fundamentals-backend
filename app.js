@@ -2,9 +2,12 @@ const express = require('express')
 const userRouter = require('./routes/users')
 const workoutRouter = require('./routes/workouts')
 const drillRouter = require('./routes/drills')
+const cors = require('cors')
 // const signinRouter = require('./routes/auth/signin')
 const app = express()
 
+
+app.use(cors())
 app.use(express.json())
 
 // app.use('/api/signin/', signinRouter)

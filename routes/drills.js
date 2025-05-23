@@ -1,11 +1,13 @@
 const drillRouter = require('express').Router()
 const config = require('../utils/config')
 
-drillRouter.get('/', async (req, res) => {
+drillRouter.get('/:id', async (req, res) => {
   try {
     const pool = await config.poolPromise
-    const result = await pool.request().query(`
-        SELECT * FROM Drills;
+    const result = await pool.request()
+      .input('skillId', config.sql.Int, req.params.id)
+      .query(`
+        SELECT * FROM Drills WHERE skill_id = @skillId;
         `)
     res.json(result.recordset)
   } catch (err) {

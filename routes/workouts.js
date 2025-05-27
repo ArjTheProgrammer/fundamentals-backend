@@ -1,8 +1,8 @@
 const workoutRouter = require('express').Router()
 const config = require('../utils/config')
 
-// Get all workouts for a user
-workoutRouter.get('/:id', async (req, res) => {
+// Get ready workouts for a user
+workoutRouter.get('/ready/:id', async (req, res) => {
   try {
     const pool = await config.poolPromise
     const result = await pool.request()
@@ -13,6 +13,29 @@ workoutRouter.get('/:id', async (req, res) => {
         FROM Workouts w
         WHERE w.user_id = @userId
         AND w.workout_name IN (
+          SELECT workout_name 
+          FROM Workouts 
+          WHERE user_id IS NULL
+        )
+        ORDER BY w.workout_name;
+        `)
+    res.json(result.recordset)
+  } catch (err) {
+    res.status(500).send({ message: err.message })
+  }
+})
+
+workoutRouter.get('/own/:id', async (req, res) => {
+  try {
+    const pool = await config.poolPromise
+    const result = await pool.request()
+      .input('userId', config.sql.Int, req.params.id)
+      .query(`
+        SELECT 
+            *
+        FROM Workouts w
+        WHERE w.user_id = @userId
+        AND w.workout_name NOT IN (
           SELECT workout_name 
           FROM Workouts 
           WHERE user_id IS NULL

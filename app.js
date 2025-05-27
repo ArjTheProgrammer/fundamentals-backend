@@ -5,6 +5,7 @@ const drillRouter = require('./routes/drills')
 const signinRouter = require('./routes/auth/signin')
 const signupRouter = require('./routes/auth/signup')
 const cors = require('cors')
+const analyticsRouter = require('./routes/analytics')
 const app = express()
 
 
@@ -16,5 +17,6 @@ app.use('/api/signup', signupRouter)
 app.use('/api/drills', drillRouter)
 app.use('/api/workouts', workoutRouter)
 app.use('/api/users', userRouter)
+app.use('/api/analytics', analyticsRouter)
 
 module.exports = app

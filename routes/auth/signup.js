@@ -1,5 +1,6 @@
 const signupRouter = require('express').Router()
 const config = require('../../utils/config')
+const bcrypt = require('bcryptjs')
 
 signupRouter.post('/', async (req, res) => {
   const { firstName, lastName, username, email, password } = req.body
@@ -8,6 +9,8 @@ signupRouter.post('/', async (req, res) => {
   if (!firstName || !lastName || !username || !email || !password) {
     return res.status(400).json({ error: 'All fields are required.', body: req.body })
   }
+
+  const passwordHash = await bcrypt.hash(password, 10)
 
   try {
     // Connect to the database
@@ -19,7 +22,7 @@ signupRouter.post('/', async (req, res) => {
       .input('last_name', config.sql.NVarChar(50), lastName)
       .input('username', config.sql.NVarChar(50), username)
       .input('email', config.sql.NVarChar(100), email)
-      .input('password', config.sql.NVarChar(255), password)
+      .input('password', config.sql.NVarChar(255), passwordHash)
       .execute('RegisterUser')
 
 
